@@ -1,0 +1,29 @@
+.navbar {
+    background-color: #2a9df4;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+  
+  .navList {
+    display: flex;
+    list-style: none;
+  }
+  
+  .navList li {
+    margin: 0 1rem;
+  }
+  
+  .navList a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+  
