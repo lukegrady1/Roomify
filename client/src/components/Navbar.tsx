@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
           <li><a href="#find-sublets">Find Sublets</a></li>
           <li><a href="#list-sublets">List Your Sublet</a></li>
           <li><a href="#dashboard">Dashboard</a></li>
-          <li><a href="#login">Login</a></li>
+          <li><a href="/login">Login</a></li>
         </ul>
       </nav>
     </header>
