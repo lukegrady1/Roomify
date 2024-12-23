@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -8,13 +9,12 @@ const Home: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
+  const navigate = useNavigate();
 
   const handleSearch = () => {
-    console.log({
-      location: searchValue,
-      checkIn: checkInDate,
-      checkOut: checkOutDate,
-    });
+    if (searchValue) {
+      navigate(`/search?location=${encodeURIComponent(searchValue)}`);
+    }
   };
 
   useEffect(() => {
@@ -93,29 +93,25 @@ const Home: React.FC = () => {
               )}
             </div>
             <div className="date-inputs">
-  <div className="date-input-wrapper">
-    <label>Check-in</label>
-    <input
-      type="date"
-      placeholder="Add Date" /* Ensures the placeholder displays */
-      value={checkInDate}
-      onChange={(e) => setCheckInDate(e.target.value)}
-    />
-  </div>
-  <div className="date-input-wrapper">
-    <label>Check-out</label>
-    <input
-      type="date"
-      placeholder="Add Date" /* Ensures the placeholder displays */
-      value={checkOutDate}
-      onChange={(e) => setCheckOutDate(e.target.value)}
-    />
-  </div>
-</div>
-
-
-
-
+              <div className="date-input-wrapper">
+                <label>Check-in</label>
+                <input
+                  type="date"
+                  placeholder="Add Date"
+                  value={checkInDate}
+                  onChange={(e) => setCheckInDate(e.target.value)}
+                />
+              </div>
+              <div className="date-input-wrapper">
+                <label>Check-out</label>
+                <input
+                  type="date"
+                  placeholder="Add Date"
+                  value={checkOutDate}
+                  onChange={(e) => setCheckOutDate(e.target.value)}
+                />
+              </div>
+            </div>
             <button onClick={handleSearch}>Search</button>
           </div>
         </div>
