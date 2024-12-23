@@ -1,0 +1,68 @@
+.search-page {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .listings-section {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    background: #f9f9f9;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .listings-section h2 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .listing-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .listing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .listing-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .listing-details {
+    padding: 1rem;
+  }
+  
+  .listing-details h3 {
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+    color: #333;
+  }
+  
+  .listing-price {
+    font-weight: bold;
+    color: #2a9df4;
+    margin-bottom: 0.5rem;
+  }
+  
+  .map-section {
+    flex: 1;
+  }
+  
