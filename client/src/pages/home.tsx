@@ -1,3 +1,5 @@
+//Homepage before redesign if I need to come back to this look at this commit in the github
+
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import Navbar from '../components/Navbar';
