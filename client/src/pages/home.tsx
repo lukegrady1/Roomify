@@ -54,87 +54,86 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div>
+    <div id="root">
       <Navbar />
-      {/* Hero Section */}
-      <div className="hero-section">
-        {/* Image Content */}
-        <div className="hero-image">
-          <img
-            src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=1080&h=720"
-            alt="Apartment"
-          />
+      <div className="page-container">
+        {/* Hero Section */}
+        <div className="hero-section">
+          <div className="hero-image">
+            <img
+              src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=1080&h=720"
+              alt="Apartment"
+            />
+          </div>
+
+          <div className="hero-content">
+            <h1>Find Your Sublet, Your Way</h1>
+            <p>Discover the best sublets near your campus in just a few clicks.</p>
+            <div className="search-box">
+              <div className="search-input-container">
+                <input
+                  type="text"
+                  placeholder="Campus/City"
+                  value={searchValue}
+                  onChange={handleInputChange}
+                  onFocus={() => setShowSuggestions(true)}
+                />
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className="suggestions">
+                    {suggestions.map((suggestion, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        {suggestion.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="date-inputs">
+                <div className="date-input-wrapper">
+                  <label>Check-in</label>
+                  <input
+                    type="date"
+                    placeholder="Add Date"
+                    value={checkInDate}
+                    onChange={(e) => setCheckInDate(e.target.value)}
+                  />
+                </div>
+                <div className="date-input-wrapper">
+                  <label>Check-out</label>
+                  <input
+                    type="date"
+                    placeholder="Add Date"
+                    value={checkOutDate}
+                    onChange={(e) => setCheckOutDate(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button onClick={handleSearch}>Search</button>
+            </div>
+          </div>
         </div>
 
-        {/* Search Box Content */}
-        <div className="hero-content">
-          <h1>Find Your Sublet, Your Way</h1>
-          <p>Discover the best sublets near your campus in just a few clicks.</p>
-          <div className="search-box">
-            <div className="search-input-container">
-              <input
-                type="text"
-                placeholder="Campus/City"
-                value={searchValue}
-                onChange={handleInputChange}
-                onFocus={() => setShowSuggestions(true)}
-              />
-              {showSuggestions && suggestions.length > 0 && (
-                <ul className="suggestions">
-                  {suggestions.map((suggestion, index) => (
-                    <li
-                      key={index}
-                      onClick={() => handleSuggestionClick(suggestion)}
-                    >
-                      {suggestion.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
+        {/* Features Section */}
+        <div className="features-section">
+          <div className="features">
+            <div className="feature">
+              <h3>Enjoy Some Flexibility</h3>
+              <p>Stay flexible with options that fit your schedule.</p>
             </div>
-            <div className="date-inputs">
-              <div className="date-input-wrapper">
-                <label>Check-in</label>
-                <input
-                  type="date"
-                  placeholder="Add Date"
-                  value={checkInDate}
-                  onChange={(e) => setCheckInDate(e.target.value)}
-                />
-              </div>
-              <div className="date-input-wrapper">
-                <label>Check-out</label>
-                <input
-                  type="date"
-                  placeholder="Add Date"
-                  value={checkOutDate}
-                  onChange={(e) => setCheckOutDate(e.target.value)}
-                />
-              </div>
+            <div className="feature">
+              <h3>Popular Listings</h3>
+              <p>Discover sublets near major campuses and cities.</p>
             </div>
-            <button onClick={handleSearch}>Search</button>
+            <div className="feature">
+              <h3>Trusted Connections</h3>
+              <p>Connect with renters and list your sublet securely.</p>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Features Section */}
-      <div className="features-section">
-        <div className="features">
-          <div className="feature">
-            <h3>Enjoy Some Flexibility</h3>
-            <p>Stay flexible with options that fit your schedule.</p>
-          </div>
-          <div className="feature">
-            <h3>Popular Listings</h3>
-            <p>Discover sublets near major campuses and cities.</p>
-          </div>
-          <div className="feature">
-            <h3>Trusted Connections</h3>
-            <p>Connect with renters and list your sublet securely.</p>
-          </div>
-        </div>
-      </div>
-
       <Footer />
     </div>
   );
