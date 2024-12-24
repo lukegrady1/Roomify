@@ -122,14 +122,29 @@ const Home: React.FC = () => {
             <div className="feature">
               <h3>Enjoy Some Flexibility</h3>
               <p>Stay flexible with options that fit your schedule.</p>
+              <img
+                src="https://via.placeholder.com/150"
+                alt="Flexibility"
+                className="feature-image"
+              />
             </div>
             <div className="feature">
               <h3>Popular Listings</h3>
               <p>Discover sublets near major campuses and cities.</p>
+              <img
+                src="https://via.placeholder.com/150"
+                alt="Popular Listings"
+                className="feature-image"
+              />
             </div>
             <div className="feature">
               <h3>Trusted Connections</h3>
               <p>Connect with renters and list your sublet securely.</p>
+              <img
+                src="https://via.placeholder.com/150"
+                alt="Trusted Connections"
+                className="feature-image"
+              />
             </div>
           </div>
         </div>
