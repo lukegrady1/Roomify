@@ -1,3 +1,11 @@
+/* Apply the modern font globally */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif; /* Apply Inter as the default font */
+}
+
 /* Reset body and html */
 html, body {
   height: 100%; 
@@ -64,7 +72,7 @@ html, body {
 /* Card for Search Box */
 .hero-content {
   position: relative;
-  margin-left: -1200px; /* Subtle overlap */
+  margin-left: -1150px; /* Subtle overlap */
   background: white;
   padding: 2rem;
   border-radius: 12px;
@@ -145,8 +153,8 @@ html, body {
 .date-inputs {
   display: flex;
   gap: 1rem;
-  width: 81%;
-  margin-left: 60px;
+  width: 36%;
+  margin-left: 53px;
 }
 
 .date-inputs input {
@@ -229,4 +237,5 @@ html, body {
 .feature p {
   color: #555;
   font-size: 1rem;
+  padding-bottom: 25px;
 }

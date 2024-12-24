@@ -11,10 +11,8 @@ const Navbar: React.FC = () => {
           Roomify
         </Link>
         <div className={styles.navbarLinks}>
-          <Link to="/search" className={styles.navbarLink}>Find Sublets</Link>
           <Link to="/list" className={styles.navbarLink}>List Your Sublet</Link>
-          <Link to="/dashboard" className={styles.navbarLink}>Dashboard</Link>
-          <Link to="/login" className={styles.navbarLink}>Login</Link>
+          <Link to="/auth" className={styles.navbarLink}>Sign Up</Link>
         </div>
       </div>
     </nav>
