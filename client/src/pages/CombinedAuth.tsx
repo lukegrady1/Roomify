@@ -92,21 +92,21 @@ const CombinedAuth: React.FC = () => {
         <div className="social-login">
           <button className="social-button google" onClick={handleGoogleSignIn}>
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+              src="https://pluspng.com/img-png/google-logo-png-open-2000.png"
               alt="Google"
             />
             Continue with Google
           </button>
           <button className="social-button apple" disabled>
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+              src="https://cdn-icons-png.flaticon.com/512/15/15476.png"
               alt="Apple"
             />
             Continue with Apple
           </button>
           <button className="social-button email" disabled>
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Email_icon.svg/512px-Email_icon.svg.png"
+              src="https://cdn-icons-png.flaticon.com/512/1004/1004796.png"
               alt="Email"
             />
             Continue with Email
