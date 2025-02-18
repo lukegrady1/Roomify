@@ -1,37 +1,83 @@
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #007bff; /* Blue background */
-  color: white;
+  background: white;
+  padding: 1rem;
+  border-bottom: 1px solid #eaeaea;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .navbarContainer {
+  max-width: 100%;
+  margin: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
 }
 
 .navbarBrand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: white;
-  text-decoration: none;
-}
-
-.navbarLinks {
   display: flex;
-}
-
-.navbarLink {
-  margin-left: 1rem;
-  color: white;
+  align-items: center;
+  gap: 0.5rem;
   text-decoration: none;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #2b6cb0;
+  transition: color 0.2s;
 }
 
-.navbarLink:hover {
-  text-decoration: underline;
+.logo {
+  font-size: 1.8rem;
+}
+
+.brandName {
+  font-weight: 800;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navLink {
+  color: #4a5568;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.navLink:hover {
+  color: #2b6cb0;
+  background: #f7fafc;
+}
+
+.authButton {
+  background: #2b6cb0;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.authButton:hover {
+  background: #2c5282;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    padding: 1rem;
+  }
+  
+  .navLinks {
+    gap: 1rem;
+  }
+  
+  .brandName {
+    display: none;
+  }
 }

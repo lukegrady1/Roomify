@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import styles from '../styles/Home.module.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Home: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -9,13 +12,9 @@ const Home: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
+  const [guests, setGuests] = useState({ adults: 1, children: 0 });
+  const [showValidation, setShowValidation] = useState(false);
   const navigate = useNavigate();
-
-  const handleSearch = () => {
-    if (searchValue) {
-      navigate(`/search?location=${encodeURIComponent(searchValue)}`);
-    }
-  };
 
   useEffect(() => {
     if (!searchValue.trim()) {
@@ -44,111 +43,152 @@ const Home: React.FC = () => {
     fetchSuggestions();
   }, [searchValue]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+  const handleSearch = () => {
+    setShowValidation(true);
+    if (isFormValid) {
+      navigate(`/search?location=${encodeURIComponent(searchValue)}`);
+    }
   };
 
-  const handleSuggestionClick = (suggestion: { name: string }) => {
-    setSearchValue(suggestion.name);
-    setShowSuggestions(false);
+  // Add disabled state for button
+  const isFormValid = searchValue && checkInDate && checkOutDate && guests.adults > 0;
+
+  // Add this handler for check-in date changes
+  const handleCheckInChange = (date: Date | null) => {
+    // Set the time to noon to avoid timezone issues
+    if (date) {
+      date.setHours(12, 0, 0, 0);
+    }
+    const newCheckInDate = date ? date.toISOString().split('T')[0] : '';
+    setCheckInDate(newCheckInDate);
+    
+    // Clear check-out date if it's before or equal to the new check-in date
+    if (checkOutDate && date && new Date(checkOutDate) <= date) {
+      setCheckOutDate('');
+    }
   };
 
   return (
-    <div id="root">
+    <div className={styles.container}>
       <Navbar />
-      <div className="page-container">
-        {/* Hero Section */}
-        <div className="hero-section">
-          <div className="hero-image">
-            <img
-              src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=1080&h=720"
-              alt="Apartment"
-            />
-          </div>
+      <main className={styles.main}>
+        <div className={styles.heroSection}>
+          <div className={styles.searchCard}>
+            <h1>Find places to stay near campus</h1>
+            <p>Discover student housing and sublets perfect for your academic journey</p>
+            
+            <div className={styles.searchForm}>
+              <div className={styles.searchGroup}>
+                <label>LOCATION</label>
+                <div className={styles.searchInputWrapper}>
+                  <input
+                    type="text"
+                    placeholder="Search by university or city"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onFocus={() => setShowSuggestions(true)}
+                  />
+                  {showValidation && !searchValue && (
+                    <div className={styles.validationMessage}>Please enter a location</div>
+                  )}
+                  {showSuggestions && suggestions.length > 0 && (
+                    <ul className={styles.suggestions}>
+                      {suggestions.map((suggestion, index) => (
+                        <li
+                          key={index}
+                          onClick={() => {
+                            setSearchValue(suggestion.name);
+                            setShowSuggestions(false);
+                          }}
+                        >
+                          {suggestion.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
 
-          <div className="hero-content">
-            <h1>Find Your Sublet, Your Way</h1>
-            <p>Discover the best sublets near your campus in just a few clicks.</p>
-            <div className="search-box">
-              <div className="search-input-container">
-                <input
-                  type="text"
-                  placeholder="Campus/City"
-                  value={searchValue}
-                  onChange={handleInputChange}
-                  onFocus={() => setShowSuggestions(true)}
-                />
-                {showSuggestions && suggestions.length > 0 && (
-                  <ul className="suggestions">
-                    {suggestions.map((suggestion, index) => (
-                      <li
-                        key={index}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                      >
-                        {suggestion.name}
-                      </li>
+              <div className={styles.dateGroup}>
+                <div className={styles.dateInput}>
+                  <label>CHECK IN</label>
+                  <DatePicker
+                    selected={checkInDate ? new Date(checkInDate + 'T12:00:00') : null}
+                    onChange={handleCheckInChange}
+                    placeholderText="Check in"
+                    className={styles.datePicker}
+                    dateFormat="MMM d, yyyy"
+                    minDate={new Date()}
+                  />
+                  {showValidation && !checkInDate && (
+                    <div className={styles.validationMessage}>Please select a check-in date</div>
+                  )}
+                </div>
+                <div className={styles.dateInput}>
+                  <label>CHECK OUT</label>
+                  <DatePicker
+                    selected={checkOutDate ? new Date(checkOutDate + 'T12:00:00') : null}
+                    onChange={(date) => {
+                      if (date) {
+                        date.setHours(12, 0, 0, 0);
+                      }
+                      setCheckOutDate(date ? date.toISOString().split('T')[0] : '');
+                    }}
+                    placeholderText="Check out"
+                    className={styles.datePicker}
+                    dateFormat="MMM d, yyyy"
+                    minDate={checkInDate ? new Date(checkInDate + 'T12:00:00') : new Date()}
+                    disabled={!checkInDate}
+                  />
+                  {showValidation && !checkOutDate && (
+                    <div className={styles.validationMessage}>Please select a check-out date</div>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.guestsGroup}>
+                <label>GUESTS</label>
+                <div className={styles.guestInputs}>
+                  <select
+                    value={guests.adults}
+                    onChange={(e) => setGuests({ ...guests, adults: Number(e.target.value) })}
+                    aria-label="Number of adults"
+                  >
+                    {[...Array(16)].map((_, i) => (
+                      <option key={i} value={i}>{i} adults</option>
                     ))}
-                  </ul>
-                )}
-              </div>
-              <div className="date-inputs">
-                <div className="date-input-wrapper">
-                  <label>Check-in</label>
-                  <input
-                    type="date"
-                    placeholder="Add Date"
-                    value={checkInDate}
-                    onChange={(e) => setCheckInDate(e.target.value)}
-                  />
-                </div>
-                <div className="date-input-wrapper">
-                  <label>Check-out</label>
-                  <input
-                    type="date"
-                    placeholder="Add Date"
-                    value={checkOutDate}
-                    onChange={(e) => setCheckOutDate(e.target.value)}
-                  />
+                  </select>
+                  {showValidation && guests.adults === 0 && (
+                    <div className={styles.validationMessage}>Please select number of guests</div>
+                  )}
                 </div>
               </div>
-              <button onClick={handleSearch}>Search</button>
+
+              <button className={styles.searchButton} onClick={handleSearch}>
+                Search
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Features Section */}
-        <div className="features-section">
-          <div className="features">
-            <div className="feature">
-              <h3>Enjoy Some Flexibility</h3>
-              <p>Stay flexible with options that fit your schedule.</p>
-              <img
-                src="https://via.placeholder.com/150"
-                alt="Flexibility"
-                className="feature-image"
-              />
-            </div>
-            <div className="feature">
-              <h3>Popular Listings</h3>
-              <p>Discover sublets near major campuses and cities.</p>
-              <img
-                src="https://via.placeholder.com/150"
-                alt="Popular Listings"
-                className="feature-image"
-              />
-            </div>
-            <div className="feature">
-              <h3>Trusted Connections</h3>
-              <p>Connect with renters and list your sublet securely.</p>
-              <img
-                src="https://via.placeholder.com/150"
-                alt="Trusted Connections"
-                className="feature-image"
-              />
-            </div>
+        <div className={styles.featuresSection}>
+          <div className={styles.feature}>
+            <div className={styles.featureIcon}>✓</div>
+            <h3>Flexible Housing Options</h3>
+            <p>Find accommodations that match your academic schedule</p>
+          </div>
+          <div className={styles.feature}>
+            <div className={styles.featureIcon}>🏛️</div>
+            <h3>Campus-Centric Locations</h3>
+            <p>Discover housing near universities across the country</p>
+          </div>
+          <div className={styles.feature}>
+            <div className={styles.featureIcon}>🔍</div>
+            <h3>Smart Filters</h3>
+            <p>Find the perfect student housing that fits your needs</p>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

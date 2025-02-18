@@ -1,0 +1,344 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main {
+    flex: 1;
+  }
+  
+  .heroSection {
+    position: relative;
+    min-height: 70vh;
+    max-height: 800px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+      url('/campus-hero.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .searchCard {
+    background: white;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  
+  .searchCard h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    color: #1a365d;
+    margin-bottom: 0.5rem;
+  }
+  
+  .searchCard p {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    color: #4a5568;
+    margin-bottom: 2rem;
+  }
+  
+  .searchForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .searchGroup, .dateGroup, .guestsGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .searchGroup label, .dateGroup label, .guestsGroup label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4a5568;
+    text-transform: uppercase;
+  }
+  
+  .searchInputWrapper {
+    position: relative;
+  }
+  
+  .searchInputWrapper input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+  
+  .searchInputWrapper input:focus {
+    outline: none;
+    border-color: #2b6cb0;
+    box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
+  }
+  
+  .suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .suggestions li {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .suggestions li:hover {
+    background: #f7fafc;
+  }
+  
+  .dateGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background: white;
+    border-radius: 8px;
+  }
+  
+  .dateInput {
+    position: relative;
+  }
+  
+  .dateInput label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4a5568;
+  }
+  
+  .dateDisplay {
+    position: absolute;
+    top: 35px;
+    left: 12px;
+    pointer-events: none;
+    color: #4a5568;
+  }
+  
+  .dateInput input[type="date"] {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #4a5568;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .dateInput input[type="date"]::-webkit-datetime-edit-text,
+  .dateInput input[type="date"]::-webkit-datetime-edit-month-field,
+  .dateInput input[type="date"]::-webkit-datetime-edit-day-field,
+  .dateInput input[type="date"]::-webkit-datetime-edit-year-field {
+    color: #a0aec0;
+  }
+  
+  .dateInput input[type="date"]:not(:valid):before {
+    content: attr(placeholder);
+    color: #a0aec0;
+  }
+  
+  .dateInput:hover input[type="date"] {
+    border-color: #cbd5e0;
+  }
+  
+  .guestInputs select {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    appearance: none;
+    background: white;
+    cursor: pointer;
+  }
+  
+  .searchButton {
+    background: #2b6cb0;
+    color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .searchButton:hover {
+    background: #2c5282;
+  }
+  
+  .searchButtonDisabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  .featuresSection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 4rem 2rem;
+    background: white;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .feature {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .featureIcon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #2b6cb0;
+  }
+  
+  .feature h3 {
+    color: #1a365d;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+  }
+  
+  .feature p {
+    color: #4a5568;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .heroSection {
+      min-height: 60vh;
+    }
+
+    .dateGroup {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-height: 1000px) {
+    .heroSection {
+      min-height: 50vh;
+    }
+  }
+
+  .datePicker {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #4a5568;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .datePicker:focus {
+    outline: none;
+    border-color: #2b6cb0;
+    box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
+  }
+
+  :global(.react-datepicker) {
+    font-family: inherit;
+    border: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  :global(.react-datepicker__header) {
+    background: white;
+    border: none;
+    padding-top: 16px;
+  }
+
+  :global(.react-datepicker__current-month) {
+    color: #1a365d;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  :global(.react-datepicker__day-name) {
+    color: #718096;
+    font-weight: 500;
+  }
+
+  :global(.react-datepicker__day) {
+    color: #4a5568;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    margin: 0.2rem;
+  }
+
+  :global(.react-datepicker__day:hover) {
+    background: #f7fafc;
+    color: #2b6cb0;
+  }
+
+  :global(.react-datepicker__day--selected) {
+    background: #2b6cb0;
+    color: white;
+  }
+
+  :global(.react-datepicker__day--keyboard-selected) {
+    background: #ebf8ff;
+    color: #2b6cb0;
+  }
+
+  :global(.react-datepicker__navigation) {
+    top: 16px;
+  }
+
+  :global(.react-datepicker__navigation--previous) {
+    left: 16px;
+  }
+
+  :global(.react-datepicker__navigation--next) {
+    right: 16px;
+  }
+
+  .validationMessage {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    color: #e53e3e;
+    font-size: 0.8rem;
+    background: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+
+  /* Adjust positioning for input wrappers */
+  .searchInputWrapper,
+  .dateInput,
+  .guestsGroup {
+    position: relative;
+    margin-bottom: 24px;
+  }
