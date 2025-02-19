@@ -14,6 +14,8 @@
     width: 100%;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
+    position: relative;
+    z-index: 2;
   }
   
   .auth-card h1 {
@@ -131,5 +133,73 @@
   
   .facebook {
     color: #1877f2;
+  }
+  
+  .error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .auth-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .forgot-password {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .forgot-password span {
+    color: #2a9df4;
+    cursor: pointer;
+  }
+  
+  .forgot-password span:hover {
+    text-decoration: underline;
+  }
+  
+  /* Add the decorative backgrounds from Login.css */
+  .background-decor {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(42, 157, 244, 0.2);
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 1;
+  }
+  
+  .background-decor-secondary {
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 193, 7, 0.2);
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: 1;
+  }
+  
+  .name-fields {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .name-fields .form-group {
+    flex: 1;
+  }
+  
+  /* Make sure inputs maintain consistent width */
+  .name-fields input {
+    width: 100%;
   }
   

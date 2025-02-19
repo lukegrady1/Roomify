@@ -8,8 +8,10 @@ const CombinedAuth: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const auth = getAuth(app);
@@ -23,19 +25,32 @@ const CombinedAuth: React.FC = () => {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
+
+    // Basic validation
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       if (isSignUp) {
-        if (!fullName.trim()) {
-          setError('Full name is required for sign up.');
+        if (!firstName.trim() || !lastName.trim()) {
+          setError('First and last name are required for sign up.');
+          setIsLoading(false);
           return;
         }
         await createUserWithEmailAndPassword(auth, email, password);
+        // Here you could also add the user's first and last name to their profile
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
-      navigate('/search'); // Redirect to SearchPage
+      navigate('/search');
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,20 +65,34 @@ const CombinedAuth: React.FC = () => {
 
   return (
     <div className="auth-container">
+      <div className="background-decor"></div>
+      <div className="background-decor-secondary"></div>
+
       <div className="auth-card">
         <h1>{isSignUp ? 'Sign Up for Roomify' : 'Log in to Roomify'}</h1>
         <p>{isSignUp ? 'Create your account to get started.' : 'Welcome back! Please log in.'}</p>
         {error && <div className="error-message">{error}</div>}
         <form className="auth-form" onSubmit={handleAuth}>
           {isSignUp && (
-            <div className="form-group">
-              <label>Full Name</label>
-              <input
-                type="text"
-                placeholder="Enter your full name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
+            <div className="name-fields">
+              <div className="form-group">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </div>
             </div>
           )}
           <div className="form-group">
@@ -84,10 +113,23 @@ const CombinedAuth: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit" className="auth-button">
-            {isSignUp ? 'Sign Up' : 'Log In'}
+          <button 
+            type="submit" 
+            className="auth-button"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Please wait...' : (isSignUp ? 'Sign Up' : 'Log In')}
           </button>
         </form>
+
+        {!isSignUp && (
+          <p className="forgot-password">
+            <span onClick={() => auth.sendPasswordResetEmail(email)}>
+              Forgot password?
+            </span>
+          </p>
+        )}
+
         <div className="separator">or</div>
         <div className="social-login">
           <button className="social-button google" onClick={handleGoogleSignIn}>

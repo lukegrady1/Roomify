@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import styles from '../styles/Home.module.css';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns"
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 const Home: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -14,34 +15,41 @@ const Home: React.FC = () => {
   const [checkOutDate, setCheckOutDate] = useState('');
   const [guests, setGuests] = useState({ adults: 1, children: 0 });
   const [showValidation, setShowValidation] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+  const [showCheckIn, setShowCheckIn] = useState(false);
+  const [showCheckOut, setShowCheckOut] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!searchValue.trim()) {
+    if (!searchValue.trim() || isSelected) {
       setSuggestions([]);
       setShowSuggestions(false);
       return;
     }
 
-    const fetchSuggestions = async () => {
-      try {
-        const response = await fetch(
-          `https://api.data.gov/ed/collegescorecard/v1/schools.json?school.name=${searchValue}&school.degrees_awarded.predominant=2,3&fields=school.name&api_key=Xpxl6fdwzfjF8paehVPMXKOaxSFvmvtOL2vFUHZw`
-        );
-        const data = await response.json();
-        const formattedSuggestions = data.results.map((item: any) => ({
-          name: item['school.name'],
-        }));
-        setSuggestions(formattedSuggestions);
-        setShowSuggestions(true);
-      } catch (error) {
-        console.error('Error fetching suggestions:', error);
-        setSuggestions([]);
-      }
-    };
+    const timeoutId = setTimeout(() => {
+      const fetchSuggestions = async () => {
+        try {
+          const response = await fetch(
+            `https://api.data.gov/ed/collegescorecard/v1/schools.json?school.name=${searchValue}&school.degrees_awarded.predominant=2,3&fields=school.name&api_key=Xpxl6fdwzfjF8paehVPMXKOaxSFvmvtOL2vFUHZw`
+          );
+          const data = await response.json();
+          const formattedSuggestions = data.results.map((item: any) => ({
+            name: item['school.name'],
+          }));
+          setSuggestions(formattedSuggestions);
+          setShowSuggestions(true);
+        } catch (error) {
+          console.error('Error fetching suggestions:', error);
+          setSuggestions([]);
+        }
+      };
 
-    fetchSuggestions();
-  }, [searchValue]);
+      fetchSuggestions();
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchValue, isSelected]);
 
   const handleSearch = () => {
     setShowValidation(true);
@@ -53,11 +61,17 @@ const Home: React.FC = () => {
   // Add disabled state for button
   const isFormValid = searchValue && checkInDate && checkOutDate && guests.adults > 0;
 
+  // Add this helper function at the top of your component
+  const adjustForTimezone = (date: Date) => {
+    const newDate = new Date(date);
+    newDate.setMinutes(newDate.getMinutes() + newDate.getTimezoneOffset());
+    return newDate;
+  };
+
   // Add this handler for check-in date changes
   const handleCheckInChange = (date: Date | null) => {
-    // Set the time to noon to avoid timezone issues
     if (date) {
-      date.setHours(12, 0, 0, 0);
+      date.setHours(20, 0, 0, 0);
     }
     const newCheckInDate = date ? date.toISOString().split('T')[0] : '';
     setCheckInDate(newCheckInDate);
@@ -83,9 +97,12 @@ const Home: React.FC = () => {
                 <div className={styles.searchInputWrapper}>
                   <input
                     type="text"
-                    placeholder="Search by university or city"
+                    placeholder="Search by College or University"
                     value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => {
+                      setSearchValue(e.target.value);
+                      setIsSelected(false);
+                    }}
                     onFocus={() => setShowSuggestions(true)}
                   />
                   {showValidation && !searchValue && (
@@ -98,7 +115,9 @@ const Home: React.FC = () => {
                           key={index}
                           onClick={() => {
                             setSearchValue(suggestion.name);
+                            setSuggestions([]);
                             setShowSuggestions(false);
+                            setIsSelected(true);
                           }}
                         >
                           {suggestion.name}
@@ -112,34 +131,76 @@ const Home: React.FC = () => {
               <div className={styles.dateGroup}>
                 <div className={styles.dateInput}>
                   <label>CHECK IN</label>
-                  <DatePicker
-                    selected={checkInDate ? new Date(checkInDate + 'T12:00:00') : null}
-                    onChange={handleCheckInChange}
-                    placeholderText="Check in"
-                    className={styles.datePicker}
-                    dateFormat="MMM d, yyyy"
-                    minDate={new Date()}
-                  />
+                  <div className={styles.datePickerContainer}>
+                    <button
+                      className={styles.dateButton}
+                      onClick={() => {
+                        setShowCheckIn(!showCheckIn);
+                        setShowCheckOut(false);
+                      }}
+                      type="button"
+                    >
+                      {checkInDate ? format(new Date(checkInDate), 'MMM d, yyyy') : 'Check in'}
+                      <span className={styles.calendarIcon}>📅</span>
+                    </button>
+                    {showCheckIn && (
+                      <div className={styles.calendarWrapper}>
+                        <DayPicker
+                          mode="single"
+                          selected={checkInDate ? new Date(checkInDate + 'T20:00:00') : undefined}
+                          onSelect={(date) => {
+                            if (date) {
+                              date.setHours(20, 0, 0, 0);
+                              handleCheckInChange(date);
+                              setShowCheckIn(false);
+                            }
+                          }}
+                          disabled={{ before: new Date() }}
+                          className={styles.calendar}
+                        />
+                      </div>
+                    )}
+                  </div>
                   {showValidation && !checkInDate && (
                     <div className={styles.validationMessage}>Please select a check-in date</div>
                   )}
                 </div>
+
                 <div className={styles.dateInput}>
                   <label>CHECK OUT</label>
-                  <DatePicker
-                    selected={checkOutDate ? new Date(checkOutDate + 'T12:00:00') : null}
-                    onChange={(date) => {
-                      if (date) {
-                        date.setHours(12, 0, 0, 0);
-                      }
-                      setCheckOutDate(date ? date.toISOString().split('T')[0] : '');
-                    }}
-                    placeholderText="Check out"
-                    className={styles.datePicker}
-                    dateFormat="MMM d, yyyy"
-                    minDate={checkInDate ? new Date(checkInDate + 'T12:00:00') : new Date()}
-                    disabled={!checkInDate}
-                  />
+                  <div className={styles.datePickerContainer}>
+                    <button
+                      className={styles.dateButton}
+                      onClick={() => {
+                        setShowCheckOut(!showCheckOut);
+                        setShowCheckIn(false);
+                      }}
+                      type="button"
+                      disabled={!checkInDate}
+                    >
+                      {checkOutDate ? format(new Date(checkOutDate), 'MMM d, yyyy') : 'Check out'}
+                      <span className={styles.calendarIcon}>📅</span>
+                    </button>
+                    {showCheckOut && (
+                      <div className={styles.calendarWrapper}>
+                        <DayPicker
+                          mode="single"
+                          selected={checkOutDate ? new Date(checkOutDate + 'T20:00:00') : undefined}
+                          onSelect={(date) => {
+                            if (date) {
+                              date.setHours(20, 0, 0, 0);
+                              setCheckOutDate(date.toISOString().split('T')[0]);
+                              setShowCheckOut(false);
+                            }
+                          }}
+                          disabled={{
+                            before: checkInDate ? new Date(checkInDate + 'T20:00:00') : new Date()
+                          }}
+                          className={styles.calendar}
+                        />
+                      </div>
+                    )}
+                  </div>
                   {showValidation && !checkOutDate && (
                     <div className={styles.validationMessage}>Please select a check-out date</div>
                   )}
