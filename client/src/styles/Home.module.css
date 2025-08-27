@@ -439,3 +439,12 @@
       max-width: 400px;
     }
   }
+
+  @media (max-width: 768px) {
+    .dateButton {
+      width: 100%;
+    }
+    .calendarWrapper {
+      width: 90%;
+    }
+  }
