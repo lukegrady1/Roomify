@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Share, Heart, Star, MapPin, Bed, Bath, Wifi, Car, Coffee, Zap, Waves, Dumbbell, PawPrint, Home } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import PhotoGrid from '../components/PhotoGrid';
 import Map from '../components/Map';
+import { MessagingService } from '../services/messagingService';
+import { supabase, isSupabaseReady, mockAuthUser } from '../lib/supabase';
 import type { Listing, ListingPhoto } from '../types';
 
 // Mock listing data (in real app, this would come from API/Supabase)
@@ -137,9 +139,73 @@ function ListingDetailPage() {
   const navigate = useNavigate();
   const [isFavorited, setIsFavorited] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [messageText, setMessageText] = useState('');
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
 
   // In a real app, you would fetch the listing data based on the ID from Supabase
   const listing = id ? MOCK_LISTINGS_DATA[id] : null;
+
+  // Get current user
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      if (!isSupabaseReady()) {
+        setUser(mockAuthUser);
+        return;
+      }
+
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      } catch (error) {
+        console.error('Error getting user:', error);
+      }
+    };
+
+    getCurrentUser();
+  }, []);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!messageText.trim() || !listing || !user || isSendingMessage) return;
+
+    // Check if user is trying to contact their own listing
+    if (listing.user_id === user.id) {
+      alert("You can't message yourself about your own listing!");
+      return;
+    }
+
+    setIsSendingMessage(true);
+    try {
+      // Create or get existing thread
+      const threadId = await MessagingService.getOrCreateThread(
+        listing.id,
+        user.id, // buyer
+        listing.user_id // seller
+      );
+
+      // Send the message
+      await MessagingService.sendMessage(threadId, user.id, messageText);
+
+      // Navigate to messages page
+      navigate(`/messages/${threadId}`);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('Failed to send message. Please try again.');
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
+
+  const handleContactClick = () => {
+    if (!user) {
+      navigate('/auth?redirect=' + encodeURIComponent(window.location.pathname));
+      return;
+    }
+    
+    setShowContactForm(true);
+    setMessageText(`Hi, I'm interested in your listing "${listing?.title}". Is it still available?`);
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -354,32 +420,48 @@ function ListingDetailPage() {
               {/* Contact Form */}
               <div className="space-y-4">
                 <button
-                  onClick={() => setShowContactForm(!showContactForm)}
+                  onClick={handleContactClick}
                   className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
-                  Contact Lister
+                  {user ? 'Contact Lister' : 'Sign in to Contact'}
                 </button>
 
-                {showContactForm && (
-                  <div className="space-y-4 pt-4 border-t">
+                {showContactForm && user && (
+                  <form onSubmit={handleSendMessage} className="space-y-4 pt-4 border-t">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Your message
                       </label>
                       <textarea
+                        value={messageText}
+                        onChange={(e) => setMessageText(e.target.value)}
                         rows={4}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Hi, I'm interested in this listing..."
+                        disabled={isSendingMessage}
                       />
                     </div>
-                    <button className="w-full bg-gray-900 text-white py-3 px-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
-                      Send Message
-                    </button>
-                  </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowContactForm(false)}
+                        className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={!messageText.trim() || isSendingMessage}
+                        className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isSendingMessage ? 'Sending...' : 'Send Message'}
+                      </button>
+                    </div>
+                  </form>
                 )}
 
                 <p className="text-xs text-gray-500 text-center">
-                  You won't be charged yet
+                  {user ? 'Start a conversation with the lister' : 'Sign in to contact the lister'}
                 </p>
               </div>
 

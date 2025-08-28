@@ -5,6 +5,7 @@ import CombinedAuth from './pages/CombinedAuth';
 import SearchPage from './pages/SearchPage';
 import ListingDetailPage from './pages/ListingDetailPage';
 import CreateListingPage from './pages/CreateListingPage';
+import MessagesPage from './pages/MessagesPage';
 import './styles/App.css'; // Correct way to import CSS for global styles
 
 const App: React.FC = () => {
@@ -15,6 +16,8 @@ const App: React.FC = () => {
       <Route path="/search" element={<SearchPage />} />
       <Route path="/listing/:id/:slug?" element={<ListingDetailPage />} />
       <Route path="/list-your-place" element={<CreateListingPage />} />
+      <Route path="/messages" element={<MessagesPage />} />
+      <Route path="/messages/:threadId" element={<MessagesPage />} />
     </Routes>
   );
 };
