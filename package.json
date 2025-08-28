@@ -19,6 +19,8 @@
     "react-router-dom": "^7.1.0"
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.3.3"
+    "@playwright/test": "^1.55.0",
+    "@types/react-router-dom": "^5.3.3",
+    "tsx": "^4.20.5"
   }
 }

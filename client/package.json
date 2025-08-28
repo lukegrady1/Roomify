@@ -12,7 +12,9 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "seed": "tsx scripts/seed.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@googlemaps/markerclusterer": "^2.6.2",
