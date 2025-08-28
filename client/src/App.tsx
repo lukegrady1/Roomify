@@ -4,6 +4,7 @@ import Home from './pages/home';
 import CombinedAuth from './pages/CombinedAuth';
 import SearchPage from './pages/SearchPage';
 import ListingDetailPage from './pages/ListingDetailPage';
+import CreateListingPage from './pages/CreateListingPage';
 import './styles/App.css'; // Correct way to import CSS for global styles
 
 const App: React.FC = () => {
@@ -13,6 +14,7 @@ const App: React.FC = () => {
       <Route path="/auth" element={<CombinedAuth />} /> {/* Replaced Login with CombinedAuth */}
       <Route path="/search" element={<SearchPage />} />
       <Route path="/listing/:id/:slug?" element={<ListingDetailPage />} />
+      <Route path="/list-your-place" element={<CreateListingPage />} />
     </Routes>
   );
 };
