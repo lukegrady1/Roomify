@@ -50,36 +50,37 @@ export function SearchBox({ className }: SearchBoxProps) {
 
   return (
     <div className={cn('bg-white rounded-2xl shadow-xl p-6 border border-border/10', className)}>
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6">
-        {/* Campus Search */}
-        <div className="lg:col-span-2">
-          <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
-            LOCATION
-          </label>
-          <CampusAutocomplete
-            value={campus}
-            onChange={handleCampusChange}
-            placeholder="Search by College or University"
-            className="h-12"
-          />
-          {showValidation && !campus && (
-            <p className="text-sm text-destructive mt-1">Please enter a location</p>
-          )}
-        </div>
+      <div className="space-y-6">
+        {/* Form Fields */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6">
+          {/* Campus Search */}
+          <div className="lg:col-span-2">
+            <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
+              LOCATION
+            </label>
+            <CampusAutocomplete
+              value={campus}
+              onChange={handleCampusChange}
+              placeholder="Search by College or University"
+              className="h-12"
+            />
+            {showValidation && !campus && (
+              <p className="text-sm text-destructive mt-1">Please enter a location</p>
+            )}
+          </div>
 
-        {/* Date Range */}
-        <div className="lg:col-span-1">
-          <DateRangePicker
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={setStartDate}
-            onEndDateChange={setEndDate}
-          />
-        </div>
+          {/* Date Range */}
+          <div className="lg:col-span-2">
+            <DateRangePicker
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+            />
+          </div>
 
-        {/* Guests & Search Button */}
-        <div className="flex flex-col justify-end">
-          <div className="mb-4 lg:mb-0">
+          {/* Guests */}
+          <div className="lg:col-span-1">
             <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
               GUESTS
             </label>
@@ -98,10 +99,13 @@ export function SearchBox({ className }: SearchBoxProps) {
               </select>
             </div>
           </div>
+        </div>
 
+        {/* Search Button */}
+        <div className="flex justify-center">
           <Button
             onClick={handleSearch}
-            className="h-12 bg-brand-500 hover:bg-brand-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="h-12 px-8 bg-brand-500 hover:bg-brand-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
             size="lg"
           >
             <Search className="mr-2 h-4 w-4" />
