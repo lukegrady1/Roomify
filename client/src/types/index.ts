@@ -31,6 +31,7 @@ export interface Listing {
   amenities?: string[];
   created_at: string;
   updated_at?: string;
+  listing_photos?: ListingPhoto[];
 }
 
 export interface ListingPhoto {

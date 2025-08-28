@@ -5,11 +5,12 @@ import Footer from '../components/Footer';
 import styles from '../styles/Home.module.css';
 import { format } from "date-fns"
 import { DayPicker } from 'react-day-picker';
+import { searchCampuses } from '../lib/campuses';
 import 'react-day-picker/dist/style.css';
 
 const Home: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
-  const [suggestions, setSuggestions] = useState<{ name: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<{ name: string; city?: string; state?: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
@@ -28,24 +29,20 @@ const Home: React.FC = () => {
     }
 
     const timeoutId = setTimeout(() => {
-      const fetchSuggestions = async () => {
-        try {
-          const response = await fetch(
-            `https://api.data.gov/ed/collegescorecard/v1/schools.json?school.name=${searchValue}&school.degrees_awarded.predominant=2,3&fields=school.name&api_key=Xpxl6fdwzfjF8paehVPMXKOaxSFvmvtOL2vFUHZw`
-          );
-          const data = await response.json();
-          const formattedSuggestions = data.results.map((item: any) => ({
-            name: item['school.name'],
-          }));
-          setSuggestions(formattedSuggestions);
-          setShowSuggestions(true);
-        } catch (error) {
-          console.error('Error fetching suggestions:', error);
-          setSuggestions([]);
-        }
-      };
-
-      fetchSuggestions();
+      try {
+        const results = searchCampuses(searchValue, 8);
+        const formattedSuggestions = results.map((campus) => ({
+          name: campus.name,
+          city: campus.city,
+          state: campus.state,
+        }));
+        setSuggestions(formattedSuggestions);
+        setShowSuggestions(formattedSuggestions.length > 0);
+      } catch (error) {
+        console.error('Error fetching campus suggestions:', error);
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
     }, 300);
 
     return () => clearTimeout(timeoutId);
@@ -54,7 +51,13 @@ const Home: React.FC = () => {
   const handleSearch = () => {
     setShowValidation(true);
     if (isFormValid) {
-      navigate(`/search?location=${encodeURIComponent(searchValue)}`);
+      const params = new URLSearchParams();
+      params.set('campus', searchValue);
+      if (checkInDate) params.set('start', checkInDate);
+      if (checkOutDate) params.set('end', checkOutDate);
+      if (guests.adults > 1) params.set('guests', guests.adults.toString());
+      
+      navigate(`/search?${params.toString()}`);
     }
   };
 
@@ -120,7 +123,12 @@ const Home: React.FC = () => {
                             setIsSelected(true);
                           }}
                         >
-                          {suggestion.name}
+                          <div style={{ fontWeight: 500 }}>{suggestion.name}</div>
+                          {(suggestion.city || suggestion.state) && (
+                            <div style={{ fontSize: '0.875rem', color: '#718096', marginTop: '2px' }}>
+                              {[suggestion.city, suggestion.state].filter(Boolean).join(', ')}
+                            </div>
+                          )}
                         </li>
                       ))}
                     </ul>

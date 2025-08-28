@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Input } from './ui/input';
 import { cn } from '../lib/utils';
-import { campuses } from '../lib/campuses';
+import { fallbackCampuses } from '../lib/campuses';
 import { Campus } from '../types';
 
 interface CampusAutocompleteProps {
@@ -32,7 +32,7 @@ export function CampusAutocomplete({
     }
 
     // Filter local campuses
-    const filtered = campuses.filter(campus =>
+    const filtered = fallbackCampuses.filter(campus =>
       campus.name.toLowerCase().includes(value.toLowerCase())
     );
 
