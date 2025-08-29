@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MessageCircle, User, Menu, X } from 'lucide-react';
 import { MessagingService } from '../services/messagingService';
@@ -130,12 +130,20 @@ const Navbar: FC = () => {
                 </div>
               </>
             ) : (
-              <Link 
-                to="/auth" 
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Sign Up
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link 
+                  to="/login" 
+                  className="text-gray-600 hover:text-gray-900 transition-colors px-3 py-2"
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  to="/signup" 
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </div>
             )}
           </div>
 
@@ -203,13 +211,22 @@ const Navbar: FC = () => {
                   </button>
                 </>
               ) : (
-                <Link 
-                  to="/auth" 
-                  className="block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Sign Up
-                </Link>
+                <div className="space-y-2">
+                  <Link 
+                    to="/login" 
+                    className="block text-gray-600 hover:text-gray-900 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link 
+                    to="/signup" 
+                    className="block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               )}
             </div>
           </div>

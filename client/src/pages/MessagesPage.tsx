@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Send, MessageCircle, Clock, MapPin } from 'lucide-react';
+import { ArrowLeft, Send, MessageCircle, MapPin } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { MessagingService } from '../services/messagingService';
 import { supabase, isSupabaseReady, mockAuthUser } from '../lib/supabase';
@@ -36,7 +36,9 @@ function MessagesPage() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          navigate('/auth?redirect=/messages');
+          const params = new URLSearchParams();
+          params.set('redirect', '/messages');
+          navigate('/auth?' + params.toString());
           return;
         }
         setUser(user);

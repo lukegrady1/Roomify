@@ -7,7 +7,7 @@ interface ChatProps {
 
 // This component has been replaced by the full messaging system
 // It's kept for backward compatibility but redirects to proper messaging
-const Chat: React.FC<ChatProps> = ({ listingId }) => {
+const Chat: React.FC<ChatProps> = ({}) => {
   return (
     <div className="flex items-center justify-center p-8 bg-gray-50 rounded-lg">
       <div className="text-center">

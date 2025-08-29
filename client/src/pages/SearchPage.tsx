@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SlidersHorizontal, List, Map as MapIcon, Search } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Map from '../components/Map';
 import ListingCard from '../components/ListingCard';
 import FiltersDrawer from '../components/FiltersDrawer';
-import { fallbackCampuses, findCampusByName } from '../lib/campuses';
-import type { Listing, SearchFilters, Campus } from '../types';
+import { findCampusByName } from '../lib/campuses';
+import type { Listing, SearchFilters } from '../types';
 
 // Mock listings data for demo
 const MOCK_LISTINGS: Listing[] = [
@@ -163,13 +163,11 @@ function SearchPage() {
     navigate(`/search?${newParams.toString()}`, { replace: true });
   };
 
-  const handleFiltersChange = (newFilters: SearchFilters) => {
+  const handleFiltersChange = () => {
     // Filters are updated but not applied to URL yet
   };
 
-  const handleApplyFilters = () => {
-    // This will be called from FiltersDrawer
-  };
+  // This will be called from FiltersDrawer
 
   const handleClearFilters = () => {
     navigate(`/search?campus=${campus}`, { replace: true });

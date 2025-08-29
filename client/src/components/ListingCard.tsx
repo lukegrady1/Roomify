@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, MapPin, Users, Bed, Bath } from 'lucide-react';
+import { Heart, MapPin, Bed, Bath } from 'lucide-react';
 import type { Listing } from '../types';
 
 interface ListingCardProps {

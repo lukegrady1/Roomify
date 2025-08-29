@@ -65,6 +65,7 @@ export interface Message {
   sender_id: string;
   body: string;
   sent_at: string;
+  read_at?: string;
 }
 
 export interface SearchFilters {

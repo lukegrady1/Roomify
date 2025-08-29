@@ -65,11 +65,11 @@ const Home: React.FC = () => {
   const isFormValid = searchValue && checkInDate && checkOutDate && guests.adults > 0;
 
   // Add this helper function at the top of your component
-  const adjustForTimezone = (date: Date) => {
-    const newDate = new Date(date);
-    newDate.setMinutes(newDate.getMinutes() + newDate.getTimezoneOffset());
-    return newDate;
-  };
+  // const adjustForTimezone = (date: Date) => {
+  //   const newDate = new Date(date);
+  //   newDate.setMinutes(newDate.getMinutes() + newDate.getTimezoneOffset());
+  //   return newDate;
+  // };
 
   // Add this handler for check-in date changes
   const handleCheckInChange = (date: Date | null) => {

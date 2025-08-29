@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import SearchBox from '../components/SearchBox';
 
 export default function HomePage() {
@@ -10,7 +11,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center">
             <div className="text-2xl font-bold text-blue-600">Roomify</div>
             <nav className="flex space-x-6">
-              <a href="/auth" className="text-gray-600 hover:text-gray-900">Sign in</a>
+              <Link to="/login" className="text-gray-600 hover:text-gray-900">Sign in</Link>
             </nav>
           </div>
         </div>

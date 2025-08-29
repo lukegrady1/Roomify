@@ -144,6 +144,26 @@
     margin-bottom: 1rem;
     font-size: 0.9rem;
   }
+
+  .success-message {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .info-message {
+    color: #856404;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
   
   .auth-button:disabled {
     background-color: #cccccc;
@@ -201,5 +221,113 @@
   /* Make sure inputs maintain consistent width */
   .name-fields input {
     width: 100%;
+  }
+
+  /* Password input with toggle button */
+  .password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .password-input-wrapper input {
+    width: 100%;
+    padding-right: 3rem;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  .password-toggle:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .password-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
+
+  .password-hint {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: block;
+  }
+
+  /* Disabled social providers */
+  .disabled-providers {
+    opacity: 0.6;
+  }
+
+  .disabled-providers .social-button {
+    cursor: not-allowed;
+  }
+
+  .disabled-providers .social-button:hover {
+    background: white;
+  }
+
+  /* Auth header styling */
+  .auth-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-header h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .auth-header p {
+    margin-bottom: 0;
+  }
+
+  /* Redirect notice styling */
+  .redirect-notice {
+    background-color: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #1565c0;
+    text-align: center;
+  }
+
+  .redirect-notice strong {
+    font-weight: 600;
+    color: #0d47a1;
+  }
+
+  /* Loading state for inputs */
+  input:disabled, button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  /* Better focus states */
+  .form-group input:focus {
+    outline: none;
+    border-color: #2a9df4;
+    box-shadow: 0 0 0 3px rgba(42, 157, 244, 0.1);
+  }
+
+  .password-toggle:focus {
+    outline: 2px solid #2a9df4;
+    outline-offset: 2px;
   }
   

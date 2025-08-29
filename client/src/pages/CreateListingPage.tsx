@@ -942,7 +942,9 @@ function CreateListingPage() {
         
         if (!user) {
           // Redirect to auth page with return URL
-          navigate('/auth?redirect=/list-your-place');
+          const params = new URLSearchParams();
+          params.set('redirect', '/list-your-place');
+          navigate('/auth?' + params.toString());
           return;
         }
         
@@ -954,7 +956,9 @@ function CreateListingPage() {
           console.log('Falling back to mock auth due to Supabase configuration');
           setUser(mockAuthUser);
         } else {
-          navigate('/auth?redirect=/list-your-place');
+          const params = new URLSearchParams();
+          params.set('redirect', '/list-your-place');
+          navigate('/auth?' + params.toString());
         }
       } finally {
         setIsAuthenticating(false);

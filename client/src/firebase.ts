@@ -1,3 +1,7 @@
+// This file is deprecated - replaced with Supabase authentication
+// See lib/supabase.ts for the current authentication implementation
+
+/*
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
@@ -11,4 +15,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app); 
+export const auth = getAuth(app);
+*/

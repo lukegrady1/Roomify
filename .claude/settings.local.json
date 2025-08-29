@@ -17,9 +17,18 @@
       "Bash(node:*)",
       "Bash(./node_modules/.bin/tsc:*)",
       "Bash(tsx:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(npx vite:*)",
+      "Bash(npx:*)",
+      "Bash(./node_modules/.bin/vite:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "C:\\Users\\lukeg\\Roomify"
+    ]
   }
 }

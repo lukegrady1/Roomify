@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, SlidersHorizontal, DollarSign, Home, Bed, Bath } from 'lucide-react';
 import type { SearchFilters } from '../types';
 

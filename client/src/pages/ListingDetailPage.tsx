@@ -199,7 +199,9 @@ function ListingDetailPage() {
 
   const handleContactClick = () => {
     if (!user) {
-      navigate('/auth?redirect=' + encodeURIComponent(window.location.pathname));
+      const params = new URLSearchParams();
+      params.set('redirect', window.location.pathname);
+      navigate('/auth?' + params.toString());
       return;
     }
     
