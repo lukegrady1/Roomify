@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference types="google.maps" />
 import { Algorithm, AlgorithmOptions } from "./algorithms";
 import { Renderer } from "./renderer";
 import { Cluster } from "./cluster";
@@ -40,7 +39,8 @@ export interface MarkerClustererOptions {
 export declare enum MarkerClustererEvents {
     CLUSTERING_BEGIN = "clusteringbegin",
     CLUSTERING_END = "clusteringend",
-    CLUSTER_CLICK = "click"
+    CLUSTER_CLICK = "click",
+    GMP_CLICK = "gmp-click"
 }
 export declare const defaultOnClusterClickHandler: onClusterClickHandler;
 /**
@@ -59,7 +59,7 @@ export declare class MarkerClusterer extends OverlayViewSafe {
     protected renderer: Renderer;
     /** @see {@link MarkerClustererOptions.map} */
     protected map: google.maps.Map | null;
-    protected idleListener: google.maps.MapsEventListener;
+    protected idleListener: google.maps.MapsEventListener | null;
     constructor({ map, markers, algorithmOptions, algorithm, renderer, onClusterClick, }: MarkerClustererOptions);
     addMarker(marker: Marker, noDraw?: boolean): void;
     addMarkers(markers: Marker[], noDraw?: boolean): void;

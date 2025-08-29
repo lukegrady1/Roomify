@@ -1,9 +1,8 @@
-import type { Campus } from '../types';
-
 // Fallback campus data when Google Places API is unavailable
 // This is a subset of major universities with approximate coordinates
-export const fallbackCampuses: Omit<Campus, 'id'>[] = [
+export const fallbackCampuses = [
   {
+    id: 'harvard-university',
     name: 'Harvard University',
     city: 'Cambridge',
     state: 'MA',
@@ -13,6 +12,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'harvard-university'
   },
   {
+    id: 'mit',
     name: 'Massachusetts Institute of Technology',
     city: 'Cambridge',
     state: 'MA',
@@ -22,6 +22,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'mit'
   },
   {
+    id: 'boston-university',
     name: 'Boston University',
     city: 'Boston',
     state: 'MA',
@@ -31,6 +32,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'boston-university'
   },
   {
+    id: 'stanford-university',
     name: 'Stanford University',
     city: 'Stanford',
     state: 'CA',
@@ -40,6 +42,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'stanford-university'
   },
   {
+    id: 'uc-berkeley',
     name: 'University of California, Berkeley',
     city: 'Berkeley',
     state: 'CA',
@@ -49,6 +52,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'uc-berkeley'
   },
   {
+    id: 'nyu',
     name: 'New York University',
     city: 'New York',
     state: 'NY',
@@ -58,6 +62,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'nyu'
   },
   {
+    id: 'columbia-university',
     name: 'Columbia University',
     city: 'New York',
     state: 'NY',
@@ -67,6 +72,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'columbia-university'
   },
   {
+    id: 'university-of-chicago',
     name: 'University of Chicago',
     city: 'Chicago',
     state: 'IL',
@@ -76,6 +82,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'university-of-chicago'
   },
   {
+    id: 'northwestern-university',
     name: 'Northwestern University',
     city: 'Evanston',
     state: 'IL',
@@ -85,6 +92,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'northwestern-university'
   },
   {
+    id: 'upenn',
     name: 'University of Pennsylvania',
     city: 'Philadelphia',
     state: 'PA',
@@ -94,6 +102,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'upenn'
   },
   {
+    id: 'yale-university',
     name: 'Yale University',
     city: 'New Haven',
     state: 'CT',
@@ -103,6 +112,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'yale-university'
   },
   {
+    id: 'princeton-university',
     name: 'Princeton University',
     city: 'Princeton',
     state: 'NJ',
@@ -112,6 +122,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'princeton-university'
   },
   {
+    id: 'ucla',
     name: 'University of California, Los Angeles',
     city: 'Los Angeles',
     state: 'CA',
@@ -121,6 +132,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'ucla'
   },
   {
+    id: 'usc',
     name: 'University of Southern California',
     city: 'Los Angeles',
     state: 'CA',
@@ -130,6 +142,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'usc'
   },
   {
+    id: 'university-of-washington',
     name: 'University of Washington',
     city: 'Seattle',
     state: 'WA',
@@ -139,6 +152,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'university-of-washington'
   },
   {
+    id: 'ut-austin',
     name: 'University of Texas at Austin',
     city: 'Austin',
     state: 'TX',
@@ -148,6 +162,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'ut-austin'
   },
   {
+    id: 'georgia-tech',
     name: 'Georgia Institute of Technology',
     city: 'Atlanta',
     state: 'GA',
@@ -157,6 +172,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'georgia-tech'
   },
   {
+    id: 'carnegie-mellon',
     name: 'Carnegie Mellon University',
     city: 'Pittsburgh',
     state: 'PA',
@@ -166,6 +182,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'carnegie-mellon'
   },
   {
+    id: 'duke-university',
     name: 'Duke University',
     city: 'Durham',
     state: 'NC',
@@ -175,6 +192,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
     slug: 'duke-university'
   },
   {
+    id: 'university-of-michigan',
     name: 'University of Michigan',
     city: 'Ann Arbor',
     state: 'MI',
@@ -185,7 +203,7 @@ export const fallbackCampuses: Omit<Campus, 'id'>[] = [
   }
 ];
 
-export function findCampusByName(query: string): Omit<Campus, 'id'> | null {
+export function findCampusByName(query: string) {
   const normalizedQuery = query.toLowerCase().trim();
   
   return fallbackCampuses.find(campus => 
@@ -195,7 +213,7 @@ export function findCampusByName(query: string): Omit<Campus, 'id'> | null {
   ) || null;
 }
 
-export function searchCampuses(query: string, limit = 10): Omit<Campus, 'id'>[] {
+export function searchCampuses(query: string, limit = 10) {
   if (!query.trim()) return fallbackCampuses.slice(0, limit);
   
   const normalizedQuery = query.toLowerCase().trim();

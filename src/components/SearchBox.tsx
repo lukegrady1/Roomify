@@ -1,157 +1,117 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CampusAutocomplete from './CampusAutocomplete';
-import DateRangePicker from './DateRangePicker';
-import { buildSearchUrl } from '../lib/queryString';
-import type { Campus } from '../types';
+import { Search, Users } from 'lucide-react';
+import { Button } from './ui/button';
+import { CampusAutocomplete } from './CampusAutocomplete';
+import { DateRangePicker } from './DateRangePicker';
+import { cn } from '../lib/utils';
+import { Campus } from '../types';
+import { buildSearchString } from '../lib/queryString';
+import { format } from 'date-fns';
 
 interface SearchBoxProps {
   className?: string;
-  defaultValues?: {
-    campus?: string;
-    startDate?: string;
-    endDate?: string;
-  };
-  onSearch?: (filters: {
-    campus: string;
-    startDate: string;
-    endDate: string;
-    selectedCampus: Campus | null;
-  }) => void;
-  showValidation?: boolean;
 }
 
-export default function SearchBox({
-  className = '',
-  defaultValues,
-  onSearch,
-  showValidation = true
-}: SearchBoxProps) {
-  const [campus, setCampus] = useState(defaultValues?.campus || '');
-  const [startDate, setStartDate] = useState(defaultValues?.startDate || '');
-  const [endDate, setEndDate] = useState(defaultValues?.endDate || '');
-  const [selectedCampus, setSelectedCampus] = useState<Campus | null>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+export function SearchBox({ className }: SearchBoxProps) {
   const navigate = useNavigate();
+  const [campus, setCampus] = useState('');
+  const [, setSelectedCampus] = useState<Campus | undefined>();
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [guests, setGuests] = useState(1);
+  const [showValidation, setShowValidation] = useState(false);
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!campus.trim()) {
-      newErrors.campus = 'Please select a campus';
-    }
-
-    if (!startDate) {
-      newErrors.startDate = 'Please select a move-in date';
-    }
-
-    if (!endDate) {
-      newErrors.endDate = 'Please select a move-out date';
-    }
-
-    if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
-      newErrors.endDate = 'Move-out date must be after move-in date';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleCampusChange = (value: string, campusData?: Campus) => {
+    setCampus(value);
+    setSelectedCampus(campusData);
   };
 
   const handleSearch = () => {
-    if (!showValidation || validateForm()) {
-      const searchData = {
-        campus,
-        startDate,
-        endDate,
-        selectedCampus
-      };
+    setShowValidation(true);
 
-      if (onSearch) {
-        onSearch(searchData);
-      } else {
-        // Default behavior: navigate to search page
-        const url = buildSearchUrl({
-          campus,
-          start: startDate,
-          end: endDate
-        });
-        navigate(url);
-      }
+    // Validate required fields
+    if (!campus.trim()) {
+      return;
     }
+
+    // Build search parameters
+    const searchParams = {
+      campus: campus,
+      ...(startDate && { start: format(startDate, 'yyyy-MM-dd') }),
+      ...(endDate && { end: format(endDate, 'yyyy-MM-dd') }),
+    };
+
+    const searchString = buildSearchString(searchParams);
+    navigate(`/search?${searchString}`);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSearch();
-    }
-  };
-
-  const isFormValid = campus && startDate && endDate;
+  // const isFormValid = campus.trim().length > 0;
 
   return (
-    <div className={`bg-white rounded-2xl shadow-lg border border-gray-200 p-6 ${className}`}>
-      <div className="space-y-4">
-        {/* Campus Search */}
-        <div>
-          <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
-            Location
-          </label>
-          <CampusAutocomplete
-            value={campus}
-            onChange={setCampus}
-            onCampusSelect={setSelectedCampus}
-            placeholder="Search by College or University"
-            className="w-full"
-          />
-          {showValidation && errors.campus && (
-            <p className="mt-1 text-sm text-red-600">{errors.campus}</p>
-          )}
-        </div>
+    <div className={cn('bg-white rounded-2xl shadow-xl p-6 border border-border/10', className)}>
+      <div className="space-y-6">
+        {/* Form Fields */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6">
+          {/* Campus Search */}
+          <div className="lg:col-span-2">
+            <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
+              LOCATION
+            </label>
+            <CampusAutocomplete
+              value={campus}
+              onChange={handleCampusChange}
+              placeholder="Search by College or University"
+              className="h-12"
+            />
+            {showValidation && !campus && (
+              <p className="text-sm text-destructive mt-1">Please enter a location</p>
+            )}
+          </div>
 
-        {/* Date Range */}
-        <div>
-          <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
-            Move Dates
-          </label>
-          <DateRangePicker
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={setStartDate}
-            onEndDateChange={setEndDate}
-            placeholder={{ start: 'Move in', end: 'Move out' }}
-            className="w-full"
-          />
-          {showValidation && errors.startDate && (
-            <p className="mt-1 text-sm text-red-600">{errors.startDate}</p>
-          )}
-          {showValidation && errors.endDate && (
-            <p className="mt-1 text-sm text-red-600">{errors.endDate}</p>
-          )}
+          {/* Date Range */}
+          <div className="lg:col-span-2">
+            <DateRangePicker
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+            />
+          </div>
+
+          {/* Guests */}
+          <div className="lg:col-span-1">
+            <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
+              GUESTS
+            </label>
+            <div className="relative">
+              <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <select
+                value={guests}
+                onChange={(e) => setGuests(Number(e.target.value))}
+                className="w-full h-12 pl-10 pr-4 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 appearance-none cursor-pointer"
+              >
+                {Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
+                  <option key={num} value={num}>
+                    {num} {num === 1 ? 'guest' : 'guests'}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
         {/* Search Button */}
-        <button
-          type="button"
-          onClick={handleSearch}
-          onKeyPress={handleKeyPress}
-          className={`
-            w-full py-3 px-6 rounded-lg font-semibold text-white transition-colors duration-200
-            ${isFormValid 
-              ? 'bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200' 
-              : 'bg-gray-400 cursor-not-allowed'
-            }
-            focus:outline-none
-          `}
-          disabled={showValidation && !isFormValid}
-        >
-          Search
-        </button>
-
-        {/* Help Text */}
-        <p className="text-xs text-gray-500 text-center">
-          Find student housing and sublets near your campus
-        </p>
+        <div className="flex justify-center">
+          <Button
+            onClick={handleSearch}
+            className="h-12 px-8 bg-brand-500 hover:bg-brand-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+            size="lg"
+          >
+            <Search className="mr-2 h-4 w-4" />
+            Search
+          </Button>
+        </div>
       </div>
     </div>
   );

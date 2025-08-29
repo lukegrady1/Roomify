@@ -1,195 +1,108 @@
-import { useState, useRef, useEffect } from 'react';
-import { format, isAfter, isBefore, isEqual } from 'date-fns';
-import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
+import { useState } from 'react';
+import { format } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { Button } from './ui/button';
+import { Calendar } from './ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { cn } from '../lib/utils';
 
 interface DateRangePickerProps {
-  startDate?: string; // ISO date string (YYYY-MM-DD)
-  endDate?: string;   // ISO date string (YYYY-MM-DD)
-  onStartDateChange: (date: string) => void;
-  onEndDateChange: (date: string) => void;
+  startDate?: Date;
+  endDate?: Date;
+  onStartDateChange: (date?: Date) => void;
+  onEndDateChange: (date?: Date) => void;
   className?: string;
-  disabled?: boolean;
-  placeholder?: {
-    start?: string;
-    end?: string;
-  };
-  minDate?: Date;
-  maxDate?: Date;
 }
 
-export default function DateRangePicker({
+export function DateRangePicker({
   startDate,
   endDate,
   onStartDateChange,
   onEndDateChange,
-  className = '',
-  disabled = false,
-  placeholder = { start: 'Move in', end: 'Move out' },
-  minDate = new Date(),
-  maxDate
+  className,
 }: DateRangePickerProps) {
-  const [showStartPicker, setShowStartPicker] = useState(false);
-  const [showEndPicker, setShowEndPicker] = useState(false);
-  const startPickerRef = useRef<HTMLDivElement>(null);
-  const endPickerRef = useRef<HTMLDivElement>(null);
+  const [showStartCalendar, setShowStartCalendar] = useState(false);
+  const [showEndCalendar, setShowEndCalendar] = useState(false);
 
-  // Close picker when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        startPickerRef.current &&
-        !startPickerRef.current.contains(event.target as Node)
-      ) {
-        setShowStartPicker(false);
-      }
-      if (
-        endPickerRef.current &&
-        !endPickerRef.current.contains(event.target as Node)
-      ) {
-        setShowEndPicker(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleStartDateSelect = (date: Date | undefined) => {
-    if (date) {
-      const dateStr = date.toISOString().split('T')[0];
-      onStartDateChange(dateStr);
-      setShowStartPicker(false);
-
-      // Clear end date if it's before or equal to the new start date
-      if (endDate) {
-        const endDateObj = new Date(endDate);
-        if (isBefore(endDateObj, date) || isEqual(endDateObj, date)) {
-          onEndDateChange('');
-        }
-      }
+  const handleStartDateSelect = (date?: Date) => {
+    onStartDateChange(date);
+    setShowStartCalendar(false);
+    
+    // Clear end date if it's before the new start date
+    if (date && endDate && endDate <= date) {
+      onEndDateChange(undefined);
     }
   };
 
-  const handleEndDateSelect = (date: Date | undefined) => {
-    if (date) {
-      const dateStr = date.toISOString().split('T')[0];
-      onEndDateChange(dateStr);
-      setShowEndPicker(false);
-    }
-  };
-
-  const formatDisplayDate = (dateStr?: string): string => {
-    if (!dateStr) return '';
-    try {
-      return format(new Date(dateStr), 'MMM d, yyyy');
-    } catch {
-      return '';
-    }
-  };
-
-  const getMinEndDate = (): Date => {
-    if (startDate) {
-      const startDateObj = new Date(startDate);
-      const nextDay = new Date(startDateObj);
-      nextDay.setDate(nextDay.getDate() + 1);
-      return nextDay;
-    }
-    return minDate;
+  const handleEndDateSelect = (date?: Date) => {
+    onEndDateChange(date);
+    setShowEndCalendar(false);
   };
 
   return (
-    <div className={`flex gap-2 ${className}`}>
-      {/* Start Date Picker */}
-      <div ref={startPickerRef} className="relative flex-1">
-        <button
-          type="button"
-          onClick={() => {
-            if (!disabled) {
-              setShowStartPicker(!showStartPicker);
-              setShowEndPicker(false);
-            }
-          }}
-          disabled={disabled}
-          className={`
-            w-full px-4 py-3 border border-gray-300 rounded-lg text-left
-            ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white hover:border-gray-400'}
-            ${showStartPicker ? 'ring-2 ring-blue-500 border-transparent' : ''}
-            transition-colors duration-200
-          `}
-        >
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                {placeholder.start}
-              </div>
-              <div className={`text-sm ${startDate ? 'text-gray-900' : 'text-gray-400'}`}>
-                {formatDisplayDate(startDate) || 'Add date'}
-              </div>
-            </div>
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        </button>
-
-        {showStartPicker && (
-          <div className="absolute z-50 mt-1 p-3 bg-white border border-gray-300 rounded-lg shadow-lg">
-            <DayPicker
+    <div className={cn('flex gap-4', className)}>
+      {/* Move-in Date */}
+      <div className="flex-1">
+        <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
+          MOVE IN
+        </label>
+        <Popover open={showStartCalendar} onOpenChange={setShowStartCalendar}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                'w-full justify-start text-left font-normal h-12',
+                !startDate && 'text-muted-foreground'
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {startDate ? format(startDate, 'MMM d, yyyy') : 'Move in'}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
               mode="single"
-              selected={startDate ? new Date(startDate) : undefined}
+              selected={startDate}
               onSelect={handleStartDateSelect}
-              disabled={{ before: minDate, after: maxDate }}
-              className="!m-0"
+              disabled={(date) => date < new Date()}
+              initialFocus
             />
-          </div>
-        )}
+          </PopoverContent>
+        </Popover>
       </div>
 
-      {/* End Date Picker */}
-      <div ref={endPickerRef} className="relative flex-1">
-        <button
-          type="button"
-          onClick={() => {
-            if (!disabled) {
-              setShowEndPicker(!showEndPicker);
-              setShowStartPicker(false);
-            }
-          }}
-          disabled={disabled || !startDate}
-          className={`
-            w-full px-4 py-3 border border-gray-300 rounded-lg text-left
-            ${disabled || !startDate ? 'bg-gray-100 cursor-not-allowed' : 'bg-white hover:border-gray-400'}
-            ${showEndPicker ? 'ring-2 ring-blue-500 border-transparent' : ''}
-            transition-colors duration-200
-          `}
-        >
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                {placeholder.end}
-              </div>
-              <div className={`text-sm ${endDate ? 'text-gray-900' : 'text-gray-400'}`}>
-                {formatDisplayDate(endDate) || 'Add date'}
-              </div>
-            </div>
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z" />
-            </svg>
-          </div>
-        </button>
-
-        {showEndPicker && (
-          <div className="absolute z-50 mt-1 p-3 bg-white border border-gray-300 rounded-lg shadow-lg">
-            <DayPicker
+      {/* Move-out Date */}
+      <div className="flex-1">
+        <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
+          MOVE OUT
+        </label>
+        <Popover open={showEndCalendar} onOpenChange={setShowEndCalendar}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                'w-full justify-start text-left font-normal h-12',
+                !endDate && 'text-muted-foreground'
+              )}
+              disabled={!startDate}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {endDate ? format(endDate, 'MMM d, yyyy') : 'Move out'}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
               mode="single"
-              selected={endDate ? new Date(endDate) : undefined}
+              selected={endDate}
               onSelect={handleEndDateSelect}
-              disabled={{ before: getMinEndDate(), after: maxDate }}
-              className="!m-0"
+              disabled={(date) => {
+                if (!startDate) return true;
+                return date <= startDate;
+              }}
+              initialFocus
             />
-          </div>
-        )}
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );

@@ -23,7 +23,11 @@
       "Bash(./node_modules/.bin/vite:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(powershell:*)",
+      "Bash(npm update)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": [],

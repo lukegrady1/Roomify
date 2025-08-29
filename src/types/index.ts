@@ -1,95 +1,85 @@
-import type { Database } from './database.types';
+export interface Campus {
+  id: string;
+  name: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  lat?: number;
+  lng?: number;
+  slug?: string;
+}
 
-// Convenience types for database entities
-export type Profile = Database['public']['Tables']['profiles']['Row'];
-export type Campus = Database['public']['Tables']['campuses']['Row'];
-export type Listing = Database['public']['Tables']['listings']['Row'];
-export type ListingPhoto = Database['public']['Tables']['listing_photos']['Row'];
-export type Favorite = Database['public']['Tables']['favorites']['Row'];
-export type MessageThread = Database['public']['Tables']['message_threads']['Row'];
-export type Message = Database['public']['Tables']['messages']['Row'];
-
-// Insert types for creating new records
-export type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
-export type CampusInsert = Database['public']['Tables']['campuses']['Insert'];
-export type ListingInsert = Database['public']['Tables']['listings']['Insert'];
-export type ListingPhotoInsert = Database['public']['Tables']['listing_photos']['Insert'];
-export type FavoriteInsert = Database['public']['Tables']['favorites']['Insert'];
-export type MessageThreadInsert = Database['public']['Tables']['message_threads']['Insert'];
-export type MessageInsert = Database['public']['Tables']['messages']['Insert'];
-
-// Update types for updating records
-export type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
-export type CampusUpdate = Database['public']['Tables']['campuses']['Update'];
-export type ListingUpdate = Database['public']['Tables']['listings']['Update'];
-export type ListingPhotoUpdate = Database['public']['Tables']['listing_photos']['Update'];
-export type FavoriteUpdate = Database['public']['Tables']['favorites']['Update'];
-export type MessageThreadUpdate = Database['public']['Tables']['message_threads']['Update'];
-export type MessageUpdate = Database['public']['Tables']['messages']['Update'];
-
-// Extended types with relationships
-export type ListingWithPhotos = Listing & {
-  listing_photos: ListingPhoto[];
-};
-
-export type ListingWithCampus = Listing & {
-  campus: Campus | null;
-};
-
-export type ListingWithDetails = Listing & {
-  listing_photos: ListingPhoto[];
-  campus: Campus | null;
-  profile: Profile;
-};
-
-export type MessageThreadWithDetails = MessageThread & {
-  listing: Listing | null;
-  buyer: Profile | null;
-  seller: Profile | null;
-  messages: Message[];
-};
-
-// UI state types
-export type SearchFilters = {
-  campus?: string;
-  startDate?: string;
-  endDate?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  roomType?: 'entire' | 'private' | 'shared';
+export interface Listing {
+  id: string;
+  campus_id?: string;
+  user_id: string;
+  title: string;
+  description?: string;
+  price: number;
+  room_type: 'entire' | 'private' | 'shared';
   bedrooms?: number;
   bathrooms?: number;
+  address_line1?: string;
+  address_line2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  lat?: number;
+  lng?: number;
+  move_in?: string;
+  move_out?: string;
   amenities?: string[];
-};
+  created_at: string;
+  updated_at?: string;
+  listing_photos?: ListingPhoto[];
+}
 
-export type SortOption = 
-  | 'relevance' 
-  | 'price_asc' 
-  | 'price_desc' 
-  | 'distance' 
-  | 'newest';
+export interface ListingPhoto {
+  id: string;
+  listing_id: string;
+  url: string;
+  width?: number;
+  height?: number;
+  position: number;
+}
 
-// Room type options
-export const ROOM_TYPES = {
-  entire: 'Entire Place',
-  private: 'Private Room',
-  shared: 'Shared Room'
-} as const;
+export interface Profile {
+  id: string;
+  full_name?: string;
+  avatar_url?: string;
+  school_email?: string;
+  created_at: string;
+}
 
-// Common amenities
-export const AMENITIES = [
-  'wifi',
-  'laundry',
-  'parking',
-  'kitchen',
-  'gym',
-  'pool',
-  'air_conditioning',
-  'heating',
-  'pets_allowed',
-  'smoking_allowed',
-  'furnished',
-  'utilities_included'
-] as const;
+export interface MessageThread {
+  id: string;
+  listing_id: string;
+  buyer_id: string;
+  seller_id: string;
+  created_at: string;
+}
 
-export type Amenity = typeof AMENITIES[number];
+export interface Message {
+  id: string;
+  thread_id: string;
+  sender_id: string;
+  body: string;
+  sent_at: string;
+  read_at?: string;
+}
+
+export interface SearchFilters {
+  campus?: string;
+  start?: string;
+  end?: string;
+  min?: number;
+  max?: number;
+  room?: 'entire' | 'private' | 'shared';
+  beds?: number;
+  baths?: number;
+  amenities?: string[];
+}
+
+export interface SearchParams extends SearchFilters {
+  sort?: 'relevance' | 'price-low' | 'price-high' | 'distance' | 'newest';
+}
